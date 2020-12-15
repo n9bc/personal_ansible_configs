@@ -55,8 +55,8 @@
        minute: "*/10"
        job: ansible-pull -o -U https://github.com/n9bc/personal_ansible_configs.git
 
-    tasks:
-    - name: install packages
-      package:
-        name:
-          - htop
+  tasks:
+  - name: install packages
+    package:
+      name:
+        - htop
