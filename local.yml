@@ -1,7 +1,6 @@
 # tasks to complete before running roles
 - hosts: localhost
   connection: local
-  tags: always
   become: true
   pre_tasks:
     - name: pre-run | update package cache (arch)
@@ -16,29 +15,35 @@
       changed_when: False
       when: ansible_distribution in ["Debian", "Ubuntu"]
 
-# run roles
-- hosts: localhost
-  tags: base
-  become: true
-  roles:
-    - base
+    - name: add ansible user
+      user:
+       name: velociraptor
+       system: yes
 
+    - name: set up sudo for ansible user
+      copy:
+       src: files/sudoer_velociraptor
+       dest: /etc/sudoers.d/velociraptor
+       owner: root
+       group: root
+       mode: 0440
 
-# end of run cleanup and reporting
-- hosts: localhost
-  become: true
-  tasks:
-  - name: cleanup package cache (debian and ubuntu)
-    tags: always
-    apt:
-      autoclean: yes
-    changed_when: false
-    when: ansible_distribution in ["Debian", "Ubuntu"]
+    - name: add brentc user
+      user:
+       name: brentc
+       system: yes
 
-  - name: autoremove orphan packages (debian and ubuntu)
-    tags: always
-    apt:
-      autoremove: yes
-      purge: yes
-    when: ansible_distribution in ["Debian", "Ubuntu"]
+    - name: set up sudo for brentc 
+      copy:
+       src: files/sudoer_brentc
+       dest: /etc/sudoers.d/brentc
+       owner: brentc
+       group: brentc
+       mode: 0440
 
+    - name: add ansible-pull cron job
+      cron:
+       name: ansible auto-provision
+       user: velociraptor
+       minute: "*/10"
+       job: ansible-pull -o -U https://github.com/n9bc/personal_ansible_configs.git
