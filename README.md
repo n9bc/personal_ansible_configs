@@ -33,5 +33,5 @@ The folder structure breaks down like this:
 **roles/server**: After the base role runs on a host, this role runs only on hosts designated as servers. Monitoring plugins, unattended-updates, server firewall rules, and other server-related things are configured here.
 
 
-ansible-pull -U https://github.com/n9bc/personal_ansible__configs.git
+ansible-pull -U https://github.com/n9bc/personal_ansible_configs.git
 # personal_ansible_configs
