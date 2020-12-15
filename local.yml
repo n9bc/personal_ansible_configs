@@ -41,9 +41,22 @@
        group: brentc
        mode: 0440
 
+    - name: copy .bashrc file
+      copy:
+       src: files/bashrc
+       dest: /home/brentc/.bashrc
+       owner: brentc
+       group: brentc
+
     - name: add ansible-pull cron job
       cron:
        name: ansible auto-provision
        user: velociraptor
        minute: "*/10"
        job: ansible-pull -o -U https://github.com/n9bc/personal_ansible_configs.git
+
+    tasks:
+    - name: install packages
+      package:
+        name:
+          - htop
